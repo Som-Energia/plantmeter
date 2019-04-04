@@ -13,49 +13,49 @@ FONTIVSOLAR_COUNTER_SERIAL='68308479'
 FONTIVSOLAR_START_DATE='2019-02-20'
 
 step "Current state"
-run scripts/genkwh_production.py list
+run scripts/genkwh_plants.py list
 
 step "Renaming Alcolea meter"
-run scripts/genkwh_production.py editmeter \
+run scripts/genkwh_plants.py editmeter \
     GenerationkWh Alcolea "1" name "$ALCOLEA_COUNTER_SERIAL"  ||
         fail "Unable to change the name"
 
 step "Setting Alcolea start date"
-run scripts/genkwh_production.py editplant \
+run scripts/genkwh_plants.py editplant \
     GenerationkWh Alcolea first_active_date "$ALCOLEA_START_DATE" ||
         fail "Unable to set Alcolea start date"
 
 step "Adding the new plant"
-run scripts/genkwh_production.py addplant \
+run scripts/genkwh_plants.py addplant \
     GenerationkWh Fontivsolar Fontivsolar "$FONTIVSOLAR_TOTAL_SHARES" ||
         fail "Unable to add the new Fontivsolar plant"
 
 step "Adding the plant meter"
-run scripts/genkwh_production.py addmeter \
+run scripts/genkwh_plants.py addmeter \
     GenerationkWh Fontivsolar "$FONTIVSOLAR_COUNTER_SERIAL" \
     "Fontivsolar main meter" "none://" "$FONTIVSOLAR_START_DATE" ||
         fail "Unable to add the meter for Fontivsolar plant"
 
 step "Enabling new plant"
-run scripts/genkwh_production.py editplant GenerationkWh Fontivsolar enabled '1' ||
+run scripts/genkwh_plants.py editplant GenerationkWh Fontivsolar enabled '1' ||
     fail "Unable to enable the new plant"
 
 step "Enabling new meter"
-run scripts/genkwh_production.py editmeter GenerationkWh Fontivsolar "$FONTIVSOLAR_COUNTER_SERIAL" enabled '1' ||
+run scripts/genkwh_plants.py editmeter GenerationkWh Fontivsolar "$FONTIVSOLAR_COUNTER_SERIAL" enabled '1' ||
     fail "Unable to enable the new meter"
 
 step "Setting Fontivsolar plant start date"
-run scripts/genkwh_production.py editplant GenerationkWh Fontivsolar first_active_date "$FONTIVSOLAR_START_DATE" ||
+run scripts/genkwh_plants.py editplant GenerationkWh Fontivsolar first_active_date "$FONTIVSOLAR_START_DATE" ||
     fail "Unable to set Fontivsolar start date"
 
 step "Setting Fontivsolar meter start date"
-run scripts/genkwh_production.py editmeter \
+run scripts/genkwh_plants.py editmeter \
     GenerationkWh Fontivsolar "$FONTIVSOLAR_COUNTER_SERIAL" \
     first_active_date "$FONTIVSOLAR_START_DATE" ||
         fail "Unable to set meter first date"
 
 step "Resulting state"
-run scripts/genkwh_production.py list
+run scripts/genkwh_plants.py list
 
 
 
