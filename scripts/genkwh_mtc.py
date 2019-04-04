@@ -57,7 +57,7 @@ sources = ns.loads("""
         intname: true
 """)
 
-@production.command()
+@mtc.command()
 @click.argument('type', type=click.Choice(sources.keys()))
 @click.argument('name', required=False)
 @click.option('--database', '-d', default='somenergia')
@@ -101,7 +101,7 @@ def curve(database, type, name, **args):
 
 
 if __name__ == '__main__':
-    production(obj={})
+    mtc(obj={})
 
 
 # vim: et ts=4 sw=4
