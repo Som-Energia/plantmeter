@@ -152,7 +152,6 @@ def init(filename):
     "Initialize aggregator objects"
     if filename:
        aggr = setupAggregator(ns.load(filename))
-       Mix.update_kwh(aggr['id'])
 
 @production.command()
 @click.argument('name')
