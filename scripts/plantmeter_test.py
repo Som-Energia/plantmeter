@@ -188,11 +188,9 @@ class PlantMeterApiTestBase(unittest.TestCase):
         aggr_obj = self.c.model('generationkwh.production.aggregator')
         plant_obj = self.c.model('generationkwh.production.plant')
         meter_obj = self.c.model('generationkwh.production.meter')
-        not_obj = self.c.model('generationkwh.production.notifier')
         meter_obj.unlink(meter_obj.search([]))
         plant_obj.unlink(plant_obj.search([]))
         aggr_obj.unlink(aggr_obj.search([]))
-        not_obj.unlink(not_obj.search([]))
 
     def clearMeasurements(self):
         self.helper.clear_mongo_collections([
@@ -596,34 +594,6 @@ class GenerationkwhProductionAggregator_Test(PlantMeterApiTestBase):
             aggr_id = aggr.read(['id'])['id']
             shares = self.helper.getNshares(aggr_id)
             self.assertEqual(shares, 3000)
-
-@destructiveTest
-class GenerationkwhProductionNotifier_Test(PlantMeterApiTestBase):
-
-    def searchNotifications(self, search):
-        return self.c.GenerationkwhProductionNotifier.search(search)
-
-    def test_add_done(self):
-            aggr, meters = self.setupAggregator(
-                    nplants=1,
-                    nmeters=1)
-            aggr_id = aggr.read(['id'])['id']
-            meter_id = meters[0].read(['id'])['id']
-            notification_id = self.c.GenerationkwhProductionNotifierTesthelper.push(
-                    meter_id,
-                    'done',
-                    'xxxx')
-
-            search_params = [
-                    ('meter_id', '=', meter_id),
-                    ('status', '=', 'done'),
-                    ('message', '=', 'xxxx')
-                    ]
-
-            self.assertEqual(
-                    self.searchNotifications(search_params)[0],
-                    notification_id)
-
 
 
 # vim: et ts=4 sw=4
