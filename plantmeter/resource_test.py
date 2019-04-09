@@ -111,7 +111,6 @@ class Meter_Test(unittest.TestCase):
         m.update_kwh(date(2015,9,4), date(2015,9,5))
         self.assertEqual(m.firstMeasurementDate(), date(2015,9,4))
 
-    # TODO: Test update_kwh setting lastcommit
     # TODO: the result of update_kwh is uses anywhere? if so, test it thoroughly if not drop it
 
 class Resource_Test(unittest.TestCase):
@@ -128,7 +127,7 @@ class Resource_Test(unittest.TestCase):
     def tearDown(self):
         self.connection.drop_database('generationkwh_test')
 
-    def setupMeter(self, n, uri, lastcommit=None):
+    def setupMeter(self, n, uri):
         uri = 'csv:/' + local_file('data/manlleu_{}.csv'.format(uri))
         return ProductionMeter(
             id=n,
@@ -137,7 +136,6 @@ class Resource_Test(unittest.TestCase):
             enabled = True,
             uri = uri,
             curveProvider = self.curveProvider,
-            lastcommit = lastcommit,
             )
 
 
@@ -227,26 +225,6 @@ class Resource_Test(unittest.TestCase):
                 0,0,0,0,0,0,0,0,6,12,10, 8,16,34,68,24,24,10,6,2,0,0,0,0,0,
                 0,0,0,0,0,0,0,0,8,14,12,10,18,36,70,26,26,12,8,4,0,0,0,0,0,
             ])
-
-    def test_update_startMissing(self):
-        m = self.setupMeter(1, '20150904', lastcommit='2015-09-04')
-
-        p = ProductionPlant(1,'plantName','plantDescription',True, meters=[m])
-        aggr = ProductionAggregator(1,'aggrName','aggrDescription',True,
-            plants=[p])
-        updated = aggr.update_kwh()
-        # Check single aggregator, with single plant and meter
-        self.assertEqual(updated[0][1][0][1], localisodatetime('2015-09-05 23:00:00'))
-
-    def test_update_outofdate(self):
-        m = self.setupMeter(1, '20150804', lastcommit='2015-09-04')
-
-        p = ProductionPlant(1,'plantName','plantDescription',True, meters=[m])
-        aggr = ProductionAggregator(1,'aggrName','aggrDescription',True,
-            plants=[p])
-        updated = aggr.update_kwh()
-        # Check single aggregator, with single plant and meter
-        self.assertEqual(updated[0][1][0][1], None)
 
     def test_lastDate_empty(self):
         m = self.setupMeter(1, '20150904')
