@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from .mongotimecurve import MongoTimeCurve, tz
-from .isodates import localisodatetime,naiveisodatetime
+from .mongotimecurve import MongoTimeCurve
+from .isodates import localisodate
 import os
 import pymongo
-from datetime import datetime, date
+from datetime import date
 from . import testutils
 from .resource import (
     ProductionMeter,
@@ -33,7 +33,7 @@ class Meter_Test(unittest.TestCase):
     def tearDown(self):
         self.connection.drop_database('generationkwh_test')
 
-    def setupMeter(self, **kwd):
+    def setupEmptyMeter(self, **kwd):
         return ProductionMeter(
             1,
             'meterName',
@@ -44,8 +44,15 @@ class Meter_Test(unittest.TestCase):
             **kwd
             )
 
-    def test_get_empty(self):
-        m = self.setupMeter()
+    def setupMeter(self, **kwd):
+        m = self.setupEmptyMeter(**kwd)
+        self.curveProvider.update(
+            localisodate("2015-09-04"), 'meterName', 'ae',
+            self.row1+self.row2)
+        return m
+
+    def test__get_kwh__empty(self):
+        m = self.setupEmptyMeter()
         self.assertEqual(
             list(m.get_kwh(
                 date(2015,9,4),
@@ -53,40 +60,32 @@ class Meter_Test(unittest.TestCase):
             2*25*[0]
             )
 
-    def test_get_filled(self):
+    def test__get_kwh__filled(self):
         m = self.setupMeter()
-        m.update_kwh(date(2015,9,4), date(2015,9,5))
-
         self.assertEqual(
             list(m.get_kwh(
                 date(2015,9,4),
                 date(2015,9,5))),
             self.row1 + self.row2)
 
-    def test_get_filled__whenFiltered(self):
+    def test__get_kwh__filled__whenFiltered(self):
         m = self.setupMeter(first_active_date="2015-09-05")
-        m.update_kwh(date(2015,9,4), date(2015,9,5))
-
         self.assertEqual(
             list(m.get_kwh(
                 date(2015,9,4),
                 date(2015,9,5))),
             [0]*25 + self.row2)
 
-    def test_get_filled__whenFiltered_onStart(self):
+    def test__get_kwh__filled__whenFiltered_onStart(self):
         m = self.setupMeter(first_active_date="2015-09-04")
-        m.update_kwh(date(2015,9,4), date(2015,9,5))
-
         self.assertEqual(
             list(m.get_kwh(
                 date(2015,9,4),
                 date(2015,9,5))),
             self.row1 + self.row2)
 
-    def test_get_filled__whenFiltered_onEnd(self):
+    def test__get_kwh__filled__whenFiltered_onEnd(self):
         m = self.setupMeter(first_active_date="2015-09-06")
-        m.update_kwh(date(2015,9,4), date(2015,9,5))
-
         self.assertEqual(
             list(m.get_kwh(
                 date(2015,9,4),
@@ -94,24 +93,21 @@ class Meter_Test(unittest.TestCase):
             [0]*50)
 
     def test_lastDate_empty(self):
-        m = self.setupMeter()
+        m = self.setupEmptyMeter()
         self.assertEqual(m.lastMeasurementDate(), None)
 
     def test_lastDate_filled(self):
         m = self.setupMeter()
-        m.update_kwh(date(2015,9,4), date(2015,9,5))
         self.assertEqual(m.lastMeasurementDate(), date(2015,9,5))
 
     def test_firstDate_empty(self):
-        m = self.setupMeter()
+        m = self.setupEmptyMeter()
         self.assertEqual(m.firstMeasurementDate(), None)
 
     def test_firstDate_filled(self):
         m = self.setupMeter()
-        m.update_kwh(date(2015,9,4), date(2015,9,5))
         self.assertEqual(m.firstMeasurementDate(), date(2015,9,4))
 
-    # TODO: the result of update_kwh is uses anywhere? if so, test it thoroughly if not drop it
 
 class Resource_Test(unittest.TestCase):
 
@@ -123,24 +119,31 @@ class Resource_Test(unittest.TestCase):
         self.connection.drop_database(self.databasename)
         self.db = self.connection[self.databasename]
         self.curveProvider = MongoTimeCurve(self.db, self.collection)
+        self.row1 = [0,0,0,0,0,0,0,0,3,6,5,4,8,17,34,12,12,5,3,1,0,0,0,0,0]
+        self.row2 = [0,0,0,0,0,0,0,0,4,7,6,5,9,18,35,13,13,6,4,2,0,0,0,0,0]
 
     def tearDown(self):
         self.connection.drop_database('generationkwh_test')
 
-    def setupMeter(self, n, uri):
-        uri = 'csv:/' + local_file('data/manlleu_{}.csv'.format(uri))
+    def setupMeter(self, n, name):
+        uri = 'csv:/' + local_file('data/manlleu_{}.csv'.format(name))
         return ProductionMeter(
             id=n,
-            name = 'meterName{}'.format(n),
+            name = name,
             description = 'meterDescription{}'.format(n),
             enabled = True,
             uri = uri,
             curveProvider = self.curveProvider,
             )
 
+    def fillMeter(self, name, start):
+        self.curveProvider.update(
+            localisodate(start), name, 'ae',
+            self.row1+self.row2)
 
-    def test_getEmpty(self):
-        m = self.setupMeter(1, '20150904')
+
+    def test__get_kwh__empty(self):
+        m = self.setupMeter(1, 'counter')
 
         p = ProductionPlant(1,'plantName','plantDescription',True, meters=[m])
         aggr = ProductionAggregator(1,'aggrName','eggrDescription',True, plants=[p])
@@ -152,14 +155,12 @@ class Resource_Test(unittest.TestCase):
                 2*25*[0] 
                 )
       
-    def test_update_onePlantOneMeter(self):
+    def test__get_kwh__onePlantOneMeter(self):
         m = self.setupMeter(1, '20150904')
 
         p = ProductionPlant(1,'plantName','plantDescription',True, meters=[m])
         aggr = ProductionAggregator(1,'aggrName','aggrDescription',True, plants=[p])
-        m.update_kwh(
-            date(2015,9,4),
-            date(2015,9,5))
+        self.fillMeter('20150904', '2015-09-04')
 
         self.assertEqual(
             list(aggr.get_kwh(
@@ -170,14 +171,14 @@ class Resource_Test(unittest.TestCase):
                 0,0,0,0,0,0,0,0,4,7,6,5,9,18,35,13,13,6,4,2,0,0,0,0,0,
             ])
 
-    def test_update_onePlantTwoMeters(self):
-        m1 = self.setupMeter(1,'20150904')
-        m2 = self.setupMeter(2,'20150904')
+    def test__get_kwh__onePlantTwoMeters(self):
+        m1 = self.setupMeter(1,'m1')
+        self.fillMeter('m1', '2015-09-04')
+        m2 = self.setupMeter(2,'m2')
+        self.fillMeter('m2', '2015-09-04')
 
         p = ProductionPlant(1,'plantName','plantDescription',True, meters=[m1,m2])
         aggr = ProductionAggregator(1,'aggrName','aggrDescription',True, plants=[p])
-        m1.update_kwh(date(2015,9,4),date(2015,9,5))
-        m2.update_kwh(date(2015,9,4),date(2015,9,5))
 
         self.assertEqual(
             list(aggr.get_kwh(
@@ -188,13 +189,13 @@ class Resource_Test(unittest.TestCase):
                 0,0,0,0,0,0,0,0,8,14,12,10,18,36,70,26,26,12,8,4,0,0,0,0,0,
             ])
 
-    def test_update_twoPlantsOneMeter(self):
-        m1 = self.setupMeter(1, '20150904')
+    def test__get_kwh__twoPlantsOneMeter(self):
+        m1 = self.setupMeter(1, 'm1')
+        self.fillMeter('m1', '2015-09-04')
         p1 = ProductionPlant(1,'plantName1','plantDescription1',True, meters=[m1])
         p2 = ProductionPlant(2,'plantName2','plantDescription2',True)
 
         aggr = ProductionAggregator(1,'aggrName','aggrDescription',True,plants=[p1,p2])
-        m1.update_kwh(date(2015,9,4),date(2015,9,5))
 
         self.assertEqual(
             list(aggr.get_kwh(
@@ -205,17 +206,17 @@ class Resource_Test(unittest.TestCase):
                 0,0,0,0,0,0,0,0,4,7,6,5,9,18,35,13,13,6,4,2,0,0,0,0,0,
             ])
 
-    def test_update_twoPlantsTwoMeters(self):
-        m1 = self.setupMeter(1, '20150904')
+    def test__get_kwh__twoPlantsTwoMeters(self):
+        m1 = self.setupMeter(1, 'm1')
+        self.fillMeter('m1', '2015-09-04')
         p1 = ProductionPlant(1,'plantName1','plantDescription1',True, meters=[m1])
 
-        m2 = self.setupMeter(2, '20150904')
+        m2 = self.setupMeter(2, 'm2')
+        self.fillMeter('m2', '2015-09-04')
         p2 = ProductionPlant(2,'plantName2','plantDescription2',True, meters=[m2])
 
         aggr = ProductionAggregator(1,'aggrName','aggreDescription',True,
             plants=[p1, p2])
-        m1.update_kwh(date(2015,9,4),date(2015,9,5))
-        m2.update_kwh(date(2015,9,4),date(2015,9,5))
 
         self.assertEqual(
             list(aggr.get_kwh(
@@ -242,63 +243,64 @@ class Resource_Test(unittest.TestCase):
         self.assertEqual(aggr.firstMeasurementDate(), None)
 
     def test_lastDate_onePlantOneMeter(self):
-        m = self.setupMeter(1, '20150904')
+        m = self.setupMeter(1, 'm1')
+        self.fillMeter('m1', '2015-09-04')
         p = ProductionPlant(1,'plantName','plantDescription',True, meters=[m])
         aggr = ProductionAggregator(1,'aggrName','aggreDescription',True, plants=[p])
-        m.update_kwh(date(2015,9,4), date(2015,9,5))
 
         self.assertEqual(aggr.lastMeasurementDate(), date(2015,9,5))
 
     def test_firstDate_onePlantOneMeter(self):
-        m = self.setupMeter(1, '20150904')
+        m = self.setupMeter(1, 'm1')
+        self.fillMeter('m1', '2015-09-04')
         p = ProductionPlant(1,'plantName','plantDescription',True, meters=[m])
         aggr = ProductionAggregator(1,'aggrName','aggreDescription',True, plants=[p])
-        m.update_kwh(date(2015,9,4), date(2015,9,5))
 
         self.assertEqual(aggr.firstMeasurementDate(), date(2015,9,4))
 
     def test_lastDate_onePlantTwoMeters(self):
-        m1 = self.setupMeter(1, '20150904')
-        m2 = self.setupMeter(2, '20150804')
+        m1 = self.setupMeter(1, 'm1')
+        m2 = self.setupMeter(2, 'm2')
+        self.fillMeter('m1', '2015-09-04')
+        self.fillMeter('m2', '2015-08-04')
 
         p = ProductionPlant(1,'plantName','plantDescription',True, meters=[m1,m2])
         aggr = ProductionAggregator(1,'aggrName','aggreDescription',True, plants=[p])
-        m1.update_kwh(date(2015,9,4), date(2015,9,5))
-        m2.update_kwh(date(2015,8,4), date(2015,8,5))
 
         self.assertEqual(aggr.lastMeasurementDate(), date(2015,8,5))
 
     def test_firstDate_onePlantTwoMeters(self):
-        m1 = self.setupMeter(1, '20150904')
-        m2 = self.setupMeter(2, '20150804')
+        m1 = self.setupMeter(1, 'm1')
+        m2 = self.setupMeter(2, 'm2')
+        self.fillMeter('m1', '2015-09-04')
+        self.fillMeter('m2', '2015-08-04')
+
         p = ProductionPlant(1,'plantName','plantDescription',True, meters=[m1,m2])
         aggr = ProductionAggregator(1,'aggrName','aggreDescription',True, plants=[p])
-        m1.update_kwh(date(2015,9,4), date(2015,9,5))
-        m2.update_kwh(date(2015,8,4), date(2015,8,5))
 
         self.assertEqual(aggr.firstMeasurementDate(), date(2015,8,4))
 
     def test_lastDate_twoPlantsTwoMeters(self):
-        m1 = self.setupMeter(1, '20150904')
-        m2 = self.setupMeter(2, '20150804')
+        m1 = self.setupMeter(1, 'm1')
+        m2 = self.setupMeter(2, 'm2')
+        self.fillMeter('m1', '2015-09-04')
+        self.fillMeter('m2', '2015-08-04')
 
         p1 = ProductionPlant(1,'plantName1','plantDescription1',True, meters=[m1])
         p2 = ProductionPlant(2,'plantName2','plantDescription2',True, meters=[m2])
         aggr = ProductionAggregator(1,'aggrName','aggreDescription',True, plants=[p1,p2])
-        m1.update_kwh(date(2015,9,4), date(2015,9,5))
-        m2.update_kwh(date(2015,8,4), date(2015,8,5))
 
         self.assertEqual(aggr.lastMeasurementDate(), date(2015,8,5))
 
     def test_firstDate_twoPlantsTwoMeters(self):
-        m1 = self.setupMeter(1, '20150904')
-        m2 = self.setupMeter(2, '20150804')
+        m1 = self.setupMeter(1, 'm1')
+        m2 = self.setupMeter(2, 'm2')
+        self.fillMeter('m1', '2015-09-04')
+        self.fillMeter('m2', '2015-08-04')
 
         p1 = ProductionPlant(1,'plantName1','plantDescription1',True, meters=[m1])
         p2 = ProductionPlant(2,'plantName2','plantDescription2',True, meters=[m2])
         aggr = ProductionAggregator(1,'aggrName','aggreDescription',True, plants=[p1,p2])
-        m1.update_kwh(date(2015,9,4), date(2015,9,5))
-        m2.update_kwh(date(2015,8,4), date(2015,8,5))
 
         self.assertEqual(aggr.firstMeasurementDate(), date(2015,8,4))
 
