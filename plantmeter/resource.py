@@ -1,11 +1,8 @@
 import numpy as np
 
-from .providers import get_provider
 from .isodates import (
     isodate,
     dateToLocal,
-    localisodate,
-    assertDateOrNone,
     assertDate,
     )
 import datetime
@@ -96,35 +93,6 @@ class ProductionMeter(Resource):
             data[:nbins] = 0
 
         return data
-
-    def update_kwh(self, start=None, end=None , notifier=None):
-        import datetime
-
-        assertDateOrNone('start', start)
-        assertDateOrNone('end', end)
-
-        provider = get_provider(self.uri)
-        updated = None
-        with provider(self.uri) as remote:
-            status = 'done'
-            message = None
-            # TODO: If zero production is the problem this catchall should be disabled
-            try:
-                for day in remote.get(start, end):
-                    for measurement in day:
-                        self.curveProvider.fillPoint(
-                                name = self.name,
-                                datetime = measurement['datetime'],
-                                ae = measurement['ae']
-                                )
-                        updated = measurement['datetime']
-            except Exception as e:
-                status = 'failed'
-                message = str(e)
-            finally:
-                if notifier:
-                    notifier.push(self.id, status, message)
-        return updated
 
     def lastMeasurementDate(self):
         result = self.curveProvider.lastFullDate(self.name)
