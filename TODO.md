@@ -1,8 +1,10 @@
 - `update_kwh` cleaning
-    - Clear Meter.lastcommit from database
-    - Clear Notifier table from database
-    - Clear Notifier security from database
-    - Clear Mongo production
+    - Database migration: Clear Meter.lastcommit
+    - Database migration: Clear Notifier table from database
+    - Database migration: Clear Notifier security entries from database
+    - Remove production model
+    - Clear Mongo production collection
+    - Remove or relocate provider deprecated clases
 
 
 - Aggregator + Mongotimecurve. Update handling duplicates
