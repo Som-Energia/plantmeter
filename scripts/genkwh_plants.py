@@ -124,6 +124,8 @@ def list():
                 enabled_tick=coloredCheck(plant.enabled),
                 **plant
                 )
+            print u"\t\tFirst active date: {first_active_date}".format(**plant)
+            print u"\t\tLast active date: {last_active_date}".format(**plant)
             if not plant.meters: continue
             meters = Meter.read(plant.meters, [])
             for meter in meters:
@@ -133,8 +135,7 @@ def list():
                     **meter
                     )
                 print u"\t\t\t{uri}".format(**meter)
-                print u"\t\t\tLast Commit: {lastcommit}".format(**meter)
-                #print plant.dump()
+                print u"\t\t\tFirst active date: {first_active_date}".format(**meter)
 
 
 @production.command()
@@ -170,7 +171,9 @@ def addmix(name, description):
 @click.argument('name')
 @click.argument('description')
 @click.argument('nshares', type=int)
-def addplant(mix, name, description, nshares):
+@click.argument('first_active_date', default='')
+@click.argument('last_active_date', default='')
+def addplant(mix, name, description, nshares, first_active_date, last_active_date):
     "Creates a new plant"
     mix_id = getMix(mix)
     plant = Plant.create(dict(
@@ -179,6 +182,8 @@ def addplant(mix, name, description, nshares):
         enabled=False,
         aggr_id=mix_id,
         nshares = nshares,
+        first_active_date=first_active_date,
+        last_active_date=last_active_date,
         ))
 
 @production.command()
@@ -260,22 +265,20 @@ def editplant(mix, plant, parameter, value):
 @click.argument('name')
 @click.argument('description')
 @click.argument('uri')
-@click.argument('lastcommit',
-    default='',
-    )
-def addmeter(mix, plant, name, description, uri, lastcommit):
+@click.argument('first_active_date', default='')
+def addmeter(mix, plant, name, description, uri, first_active_date):
     "Creates a new meter"
 
     plant_id = getPlant(mix, plant)
 
-    if lastcommit == '':
-        lastcommit = None
+    if first_active_date == '':
+        first_active_date = None
     meter = Meter.create(dict(
         plant_id=plant_id,
         name=name,
         description=description,
         uri=uri,
-        lastcommit=lastcommit,
+        first_active_date=first_active_date,
         enabled=False,
         ))
 
