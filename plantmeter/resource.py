@@ -47,17 +47,6 @@ class ParentResource(Resource):
             if child.enabled
             ], axis=0)
 
-    def update_kwh(self, start=None, end=None, notifier=None):
-
-        assertDateOrNone('start', start)
-        assertDateOrNone('end', end)
-
-        return [
-            # TODO: Untested you can mess up with ID
-            (child.id, child.update_kwh(start, end, notifier))
-            for child in self.children
-            ]
-
     def firstMeasurementDate(self):
         return min([
             child.firstMeasurementDate()
