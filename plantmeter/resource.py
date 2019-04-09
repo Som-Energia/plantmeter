@@ -85,11 +85,8 @@ class ProductionPlant(ParentResource):
 class ProductionMeter(Resource):
     def __init__(self, *args, **kwargs):
         self.uri = kwargs.pop('uri', None)
-        self.lastcommit = kwargs.pop('lastcommit', None)
         self.first_active_date = kwargs.pop('first_active_date', None)
         self.first_active_date = self.first_active_date and isodate(self.first_active_date)
-        if self.lastcommit:
-            self.lastcommit = localisodate(self.lastcommit).date() + datetime.timedelta(days=1)
         self.curveProvider = kwargs.pop('curveProvider', None)
         super(ProductionMeter, self).__init__(*args, **kwargs)
 
@@ -116,9 +113,6 @@ class ProductionMeter(Resource):
 
         assertDateOrNone('start', start)
         assertDateOrNone('end', end)
-
-        if start is None:
-            start = self.lastcommit
 
         provider = get_provider(self.uri)
         updated = None

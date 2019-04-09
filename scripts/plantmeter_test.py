@@ -207,7 +207,7 @@ class PlantMeterApiTestBase(unittest.TestCase):
         for filename in os.listdir(self.tempdir):
             os.remove(os.path.join(self.tempdir, filename))
 
-    def setupAggregator(self, nplants, nmeters, lastcommit=None):
+    def setupAggregator(self, nplants, nmeters):
         aggr_obj = self.c.model('generationkwh.production.aggregator')
         aggr = aggr_obj.create(dict(
             name='myaggr',
@@ -218,7 +218,7 @@ class PlantMeterApiTestBase(unittest.TestCase):
         for plant in range(nplants):
             plant_id = self.setupPlant(aggr, plant)
             for meter in range(nmeters):
-                meters.append(self.setupMeter(plant_id, plant, meter, lastcommit))
+                meters.append(self.setupMeter(plant_id, plant, meter))
         return aggr, meters
 
     def setupPlant(self, aggr_id, plant):
@@ -230,16 +230,13 @@ class PlantMeterApiTestBase(unittest.TestCase):
             enabled=True,
             nshares=1000*(plant+1)))
 
-    def setupMeter(self, plant_id, plant, meter, lastcommit=None):
+    def setupMeter(self, plant_id, plant, meter):
         meter_obj = self.c.model('generationkwh.production.meter')
-        if lastcommit:
-            lastcommit=lastcommit.strftime('%Y-%m-%d')
         return meter_obj.create(dict(
             plant_id=plant_id,
             name='mymeter%d%d' % (plant, meter),
             description='mymeter%d%d' % (plant, meter),
             uri='csv://%s/mymeter%d%d' % (self.tempdir, plant, meter),
-            lastcommit=lastcommit,
             first_active_date='2000-01-01',
             enabled=True))
 
@@ -279,9 +276,6 @@ class PlantMeterApiTestBase(unittest.TestCase):
                         naiveisodate(end)+datetime.timedelta(days=1)
                     ), values)
                 ])
-
-    def getLastcommit(self, meter_id):
-        return self.c.GenerationkwhProductionMeter.read(meter_id, ['lastcommit'])['lastcommit']
 
 @destructiveTest
 class GenerationkwhProductionAggregator_Test(PlantMeterApiTestBase):
@@ -505,12 +499,11 @@ class GenerationkwhProductionAggregator_Test(PlantMeterApiTestBase):
                     aggr_id, '2015-08-16', '2015-08-17')
             self.assertEqual(production, 10*[0]+14*[10]+[0]+10*[0]+14*[20]+[0])
 
-    @unittest.skip('working on')
     def test_fillMeter_missing(self):
             aggr,meters = self.setupAggregator(
                     nplants=1,
                     nmeters=1,
-                    lastcommit=naiveisodate('2015-08-15'))
+                    )
             aggr_id = aggr.read(['id'])['id']
             meter_id = meters[0].read(['id'])['id']
             self.fillMeter('mymeter00',[
@@ -520,7 +513,6 @@ class GenerationkwhProductionAggregator_Test(PlantMeterApiTestBase):
             production = self.helper.get_kwh(
                     aggr_id, '2015-08-16', '2015-08-16')
             self.assertEqual(production, 10*[0]+14*[10]+[0])
-            self.assertEqual(self.getLastcommit(meter_id), '2015-08-16')
 
     def test_firstMeasurementDate_noPoint(self):
             aggr,meters = self.setupAggregator(
