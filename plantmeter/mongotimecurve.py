@@ -24,6 +24,7 @@ from .isodates import (
     toLocal,
     tz,
     addDays,
+    addHours,
     )
 
 
@@ -203,8 +204,14 @@ class MongoTimeCurve(object):
         return self._firstLastDate(name)
 
     def lastFullDate(self,name):
-        # TODO: dumb implementation, having just a single hour considers whole date filled
-        return self.lastDate(name)
+        order = pymongo.DESCENDING
+        for point in (self.collection
+                .find(dict(name=name))
+                .sort(self.timestamp, order)
+                .limit(1)
+                ):
+            return toLocal(addHours(asUtc(point[self.timestamp]),-18)).replace(
+                    hour=0,minute=0,second=0)
     def firstFullDate(self,name):
         # TODO: dumb implementation, having just a single hour considers whole date filled
         return self.firstDate(name)

@@ -568,13 +568,19 @@ class MongoTimeCurve_Test(unittest.TestCase):
             list(range(1,25)) + [0])
 
     def test_lastFullDate_withNoPoints(self):
-        mtc = self.setupDatePoints('2015-01-01', 'miplanta', [1]*24)
-
+        mtc = self.setupDatePoints('2015-01-01', 'miplanta', [])
         lastdate = mtc.lastFullDate('miplanta')
-        self.assertEqual(lastdate,localisodate('2015-01-01'))
+        self.assertEqual(lastdate, None)
 
-    def test_firstFullDate_withNoPoints(self):
+    def test_lastFullDate_withPoints(self):
         mtc = self.setupDatePoints('2015-01-01', 'miplanta', [1]*24)
+
+        firstdate = mtc.lastFullDate('miplanta')
+        self.assertEqual(firstdate,localisodate('2015-01-01'))
+
+    def test_firstFullDate_withIncompleteDay(self):
+        mtc = self.setupDatePoints('2015-01-01', 'miplanta', [1]*24)
+        mtc = self.setupDatePoints('2015-01-02', 'miplanta', [1]*18)
 
         firstdate = mtc.lastFullDate('miplanta')
         self.assertEqual(firstdate,localisodate('2015-01-01'))
