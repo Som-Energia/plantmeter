@@ -63,10 +63,15 @@ class ProductionAggregator(ParentResource):
         super(ProductionAggregator, self).__init__(
             id, name, description, enabled, children=plants)
 
+    def firstActiveDate(self):
+        if not self.children: return None
+        return isodate(min(plant.first_active_date for plant in self.children))
+
 class ProductionPlant(ParentResource):
     def __init__(self, id, name, description, enabled, first_active_date=None, last_active_date=None, meters=[]):
         super(ProductionPlant, self).__init__(
             id, name, description, enabled, children=meters)
+        self.first_active_date = first_active_date
 
 class ProductionMeter(Resource):
     def __init__(self, *args, **kwargs):

@@ -304,6 +304,61 @@ class Resource_Test(unittest.TestCase):
 
         self.assertEqual(aggr.firstMeasurementDate(), date(2015,8,4))
 
+class Mix_Test(unittest.TestCase):
+
+    def setUp(self):
+        self.databasename = 'generationkwh_test'
+        self.collection = 'production'
+
+        self.connection = pymongo.MongoClient()
+        self.connection.drop_database(self.databasename)
+        self.db = self.connection[self.databasename]
+        self.curveProvider = MongoTimeCurve(self.db, self.collection)
+        self.row1 = [0,0,0,0,0,0,0,0,3,6,5,4,8,17,34,12,12,5,3,1,0,0,0,0,0]
+        self.row2 = [0,0,0,0,0,0,0,0,4,7,6,5,9,18,35,13,13,6,4,2,0,0,0,0,0]
+
+    def tearDown(self):
+        self.connection.drop_database('generationkwh_test')
+
+    def setupMeter(self, n, name):
+        uri = 'csv:/' + local_file('data/manlleu_{}.csv'.format(name))
+        return ProductionMeter(
+            id=n,
+            name = name,
+            description = 'meterDescription{}'.format(n),
+            enabled = True,
+            uri = uri,
+            curveProvider = self.curveProvider,
+            )
+
+    def fillMeter(self, name, start):
+        self.curveProvider.update(
+            localisodate(start), name, 'ae',
+            self.row1+self.row2)
+
+
+    def test_firstActiveDate_noPlants(self):
+        aggr = ProductionAggregator(1,'aggrName','aggreDescription',True, plants=[])
+
+        self.assertEqual(aggr.firstActiveDate(), None)
+
+    def test_firstActiveDate_singlePlant(self):
+        m1 = self.setupMeter(1, 'm1')
+        p1 = ProductionPlant(1,'plantName1','plantDescription1',True, '2000-01-01', meters=[m1])
+        aggr = ProductionAggregator(1,'aggrName','aggreDescription',True, plants=[p1])
+
+        self.assertEqual(aggr.firstActiveDate(), date(2000,1,1))
+
+    def test_firstActiveDate_manyPlants(self):
+        m1 = self.setupMeter(1, 'm1')
+        m2 = self.setupMeter(2, 'm2')
+        p1 = ProductionPlant(1,'plantName1','plantDescription1',True, '2000-01-01', meters=[m1])
+        p2 = ProductionPlant(2,'plantName2','plantDescription2',True, '2001-01-01', meters=[m2])
+        aggr = ProductionAggregator(1,'aggrName','aggreDescription',True, plants=[p1,p2])
+
+        self.assertEqual(aggr.firstActiveDate(), date(2000,1,1))
+
+        
 
 
 # vim: et ts=4 sw=4
