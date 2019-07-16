@@ -55,6 +55,11 @@ sources = ns.loads("""
         timefield: datetime
         creationfield: create_at
         intname: true
+    rightscorrection:
+        collection: generationkwh_rightscorrection
+        datafield: rights_kwh
+        timefield: datetime
+        creationfield: create_at
 """)
 
 @mtc.command()
