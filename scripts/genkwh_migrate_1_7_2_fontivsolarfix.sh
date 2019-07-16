@@ -40,6 +40,12 @@ run scripts/genkwh_plants.py editplant \
     GenerationkWh Fontivsolar first_active_date "$FONTIVSOLAR_START_DATE" ||
         fail "Unable to set Fontivsolar start date"
 
+step "Setting Fontivsolar meter start date"
+run scripts/genkwh_plants.py editmeter \
+    GenerationkWh Fontivsolar "$FONTIVSOLAR_COUNTER_SERIAL" \
+    first_active_date "$FONTIVSOLAR_START_DATE" ||
+        fail "Unable to set meter first date"
+
 step "Resulting state"
 run scripts/genkwh_plants.py list
 
@@ -72,6 +78,7 @@ run ${MONGOBINPATH}mongodump $MONGOOPTS -o "$OUTPUTDIR/dump-result" --db somener
 
 step "Undo commands:"
 echo scripts/genkwh_plants.py editmeter GenerationkWh Fontivsolar 501815908 name 68308479
+echo scripts/genkwh_plants.py editmeter GenerationkWh Fontivsolar first_active_date 2019-02-20
 echo scripts/genkwh_plants.py editmeter GenerationkWh Fontivsolar 68308479 first_active_date 2019-02-20
 
 
