@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PYTHONIOENCODING=utf8
+
 function step() { echo -e '\033[34;1m'"$*"'\033[0m'; }
 function error() { echo -e '\033[31;1m'"$*"'\033[0m'; }
 function warn() { echo -e '\033[33m'"$*"'\033[0m'; }
