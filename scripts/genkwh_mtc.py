@@ -34,12 +34,12 @@ from plantmeter.mongotimecurve import MongoTimeCurve
 import pymongo
 
 sources = ns.loads("""
-    gisce:
+    production:
         collection: tm_profile
         datafield: ae
         timefield: utc_gkwh_timestamp
         creationfield: create_date
-    production:
+    production_old: # deprecated
         collection: generationkwh.production.measurement
         datafield: ae
         timefield: datetime
