@@ -14,6 +14,12 @@ nosetests scripts # Run erp tests (require a working erp)
 
 ## CHANGES
 
+### 1.7.2
+
+- `genkwh_production` script renamed as `genkwh_plants`
+- `genkwh_production curve` extracted as `genkwh_mtc`
+- `update_kwh` methods removed
+
 ### 1.7.1 2019-04-04
 
 - Removed deprecated scripts `genkwh_pull_status` and `genkwh_export`
