@@ -12,7 +12,6 @@ function capture() { echo -e '\033[35;1m'Running: '\033[33;1m'"${*:2}"'\033[0m';
 GENERATIONKWH_MIX_ID=1
 MATALLANA_COUNTER_SERIAL='68308479'
 FONTIVSOLAR_COUNTER_SERIAL='501815908'
-FONTIVSOLAR_START_DATE='2019-01-24'
 EXECUTION_DATE=$(date +%F-%H%m%S)
 
 OUTPUTDIR="migrationrun-${EXECUTION_DATE}"
@@ -34,17 +33,6 @@ step "Fixing Fontivsolar meter serial number"
 run scripts/genkwh_plants.py editmeter \
     GenerationkWh Fontivsolar "$MATALLANA_COUNTER_SERIAL" name "$FONTIVSOLAR_COUNTER_SERIAL" ||
         fail "Unable to change Fontivsolar meter serial"
-
-step "Fixing Fontivsolar plant start date"
-run scripts/genkwh_plants.py editplant \
-    GenerationkWh Fontivsolar first_active_date "$FONTIVSOLAR_START_DATE" ||
-        fail "Unable to set Fontivsolar start date"
-
-step "Setting Fontivsolar meter start date"
-run scripts/genkwh_plants.py editmeter \
-    GenerationkWh Fontivsolar "$FONTIVSOLAR_COUNTER_SERIAL" \
-    first_active_date "$FONTIVSOLAR_START_DATE" ||
-        fail "Unable to set meter first date"
 
 step "Resulting state"
 run scripts/genkwh_plants.py list
@@ -78,8 +66,6 @@ run ${MONGOBINPATH}mongodump $MONGOOPTS -o "$OUTPUTDIR/dump-result" --db somener
 
 step "Undo commands:"
 echo scripts/genkwh_plants.py editmeter GenerationkWh Fontivsolar 501815908 name 68308479
-echo scripts/genkwh_plants.py editmeter GenerationkWh Fontivsolar first_active_date 2019-02-20
-echo scripts/genkwh_plants.py editmeter GenerationkWh Fontivsolar 68308479 first_active_date 2019-02-20
 
 
 
