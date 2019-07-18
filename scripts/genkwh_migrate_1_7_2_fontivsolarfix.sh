@@ -39,8 +39,9 @@ run scripts/genkwh_plants.py list
 
 step "Dumping previous granted rights"
 capture rightspershare-pre-120.csv scripts/genkwh_mtc.py curve rightspershare 120
-capture rightspershare-pre-20      scripts/genkwh_mtc.py curve rightspershare 20
-capture rightspershare-pre-1       scripts/genkwh_mtc.py curve rightspershare 1
+capture rightspershare-pre-20.csv  scripts/genkwh_mtc.py curve rightspershare 20
+capture rightspershare-pre-1.csv   scripts/genkwh_mtc.py curve rightspershare 1
+capture remainders-pre.cvs genkwh_remainders.py active
 
 step "Recomputing rights"
 run genkwh_productionloader.py recompute --id "$GENERATIONKWH_MIX_ID" ||
@@ -48,13 +49,14 @@ run genkwh_productionloader.py recompute --id "$GENERATIONKWH_MIX_ID" ||
 
 step "Dumping resulting granted rights"
 capture rightspershare-120.csv scripts/genkwh_mtc.py curve rightspershare 120
-capture rightspershare-20      scripts/genkwh_mtc.py curve rightspershare 20
-capture rightspershare-1       scripts/genkwh_mtc.py curve rightspershare 1
+capture rightspershare-20.csv  scripts/genkwh_mtc.py curve rightspershare 20
+capture rightspershare-1.csv   scripts/genkwh_mtc.py curve rightspershare 1
+capture remainders.cvs genkwh_remainders.py active
 
 step "Dumping corrections"
 capture rightscorrection-120.csv scripts/genkwh_mtc.py curve rightscorrection 120
-capture rightscorrection-20      scripts/genkwh_mtc.py curve rightscorrection 20
-capture rightscorrection-1       scripts/genkwh_mtc.py curve rightscorrection 1
+capture rightscorrection-20.csv  scripts/genkwh_mtc.py curve rightscorrection 20
+capture rightscorrection-1.csv   scripts/genkwh_mtc.py curve rightscorrection 1
 
 step "Dumping current mongo collections"
 run ${MONGOBINPATH}mongodump $MONGOOPTS -o "$OUTPUTDIR/dump-result" --db somenergia -c tm_profile
