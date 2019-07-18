@@ -75,7 +75,6 @@ class ProductionPlant(ParentResource):
 
 class ProductionMeter(Resource):
     def __init__(self, *args, **kwargs):
-        self.uri = kwargs.pop('uri', None)
         self.first_active_date = kwargs.pop('first_active_date', None)
         self.first_active_date = self.first_active_date and isodate(self.first_active_date)
         self.curveProvider = kwargs.pop('curveProvider', None)

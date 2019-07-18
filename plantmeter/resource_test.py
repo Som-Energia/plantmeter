@@ -26,7 +26,6 @@ class Meter_Test(unittest.TestCase):
         self.connection.drop_database(self.databasename)
         self.db = self.connection[self.databasename]
         self.curveProvider = MongoTimeCurve(self.db, self.collection)
-        self.uri = 'csv:/' + local_file('data/manlleu_20150904.csv')
         self.row1 = [0,0,0,0,0,0,0,0,3,6,5,4,8,17,34,12,12,5,3,1,0,0,0,0,0,]
         self.row2 = [0,0,0,0,0,0,0,0,4,7,6,5,9,18,35,13,13,6,4,2,0,0,0,0,0,]
 
@@ -39,7 +38,6 @@ class Meter_Test(unittest.TestCase):
             'meterName',
             'meterDescription',
             True,
-            uri = self.uri,
             curveProvider = self.curveProvider,
             **kwd
             )
@@ -126,13 +124,11 @@ class Resource_Test(unittest.TestCase):
         self.connection.drop_database('generationkwh_test')
 
     def setupMeter(self, n, name):
-        uri = 'csv:/' + local_file('data/manlleu_{}.csv'.format(name))
         return ProductionMeter(
             id=n,
             name = name,
             description = 'meterDescription{}'.format(n),
             enabled = True,
-            uri = uri,
             curveProvider = self.curveProvider,
             )
 
@@ -321,13 +317,11 @@ class Mix_Test(unittest.TestCase):
         self.connection.drop_database('generationkwh_test')
 
     def setupMeter(self, n, name):
-        uri = 'csv:/' + local_file('data/manlleu_{}.csv'.format(name))
         return ProductionMeter(
             id=n,
             name = name,
             description = 'meterDescription{}'.format(n),
             enabled = True,
-            uri = uri,
             curveProvider = self.curveProvider,
             )
 

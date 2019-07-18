@@ -134,7 +134,6 @@ def list():
                     enabled_tick=coloredCheck(meter.enabled),
                     **meter
                     )
-                print u"\t\t\t{uri}".format(**meter)
                 print u"\t\t\tFirst active date: {first_active_date}".format(**meter)
 
 
@@ -264,9 +263,8 @@ def editplant(mix, plant, parameter, value):
 @click.argument('plant')
 @click.argument('name')
 @click.argument('description')
-@click.argument('uri')
 @click.argument('first_active_date', default='')
-def addmeter(mix, plant, name, description, uri, first_active_date):
+def addmeter(mix, plant, name, description, first_active_date):
     "Creates a new meter"
 
     plant_id = getPlant(mix, plant)
@@ -277,7 +275,6 @@ def addmeter(mix, plant, name, description, uri, first_active_date):
         plant_id=plant_id,
         name=name,
         description=description,
-        uri=uri,
         first_active_date=first_active_date,
         enabled=False,
         ))

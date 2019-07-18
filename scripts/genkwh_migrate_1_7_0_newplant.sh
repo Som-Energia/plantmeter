@@ -33,7 +33,7 @@ run scripts/genkwh_plants.py addplant \
 step "Adding the plant meter"
 run scripts/genkwh_plants.py addmeter \
     GenerationkWh Fontivsolar "$FONTIVSOLAR_COUNTER_SERIAL" \
-    "Fontivsolar main meter" "none://" "$FONTIVSOLAR_START_DATE" ||
+    "Fontivsolar main meter" "$FONTIVSOLAR_START_DATE" ||
         fail "Unable to add the meter for Fontivsolar plant"
 
 step "Enabling new plant"
