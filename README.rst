@@ -15,6 +15,35 @@ INSTALL
 CHANGES
 -------
 
+1.7.2 2019-07-18
+~~~~~~~~~~~~~~~~
+
+*Not importing anymore release*
+
+-  Removing logic for importing metering since now is done by Gisce:
+
+   -  Removed ``Meter.last_commit`` related to the meter importing logic
+   -  Removed ``GenerationkwhProductionNotifier`` and related helpers
+   -  ``update_kwh`` methods removed
+   -  Removed all (metering) providers
+   -  Removed ``GenerationkwhProductionAggregator.getNShares()``
+
+-  ``genkwh_production`` script renamed as ``genkwh_plants``
+-  ``genkwh_production curve`` extracted as ``genkwh_mtc``
+-  ``genkwh_mtc``: collections alias renamed:
+
+   -  ``gisce`` -> ``production``
+   -  ``production`` -> ``production_old``
+
+-  ``genkwh_mtc``: New collection ``rightscorrection``
+-  Plants have ``first/last_active_date``
+-  Meters have ``first/last_active_date``
+-  New ``Aggregator.firstActiveDate()`` returning the min of the plant's
+   ``first_active_date``
+-  Functional tests moved to ``som_plantmeter/tests``
+-  FIX: Fontivsolar meter number was wrong
+-  New migration script to perform the former fix and rewrite the rights
+
 1.7.1 2019-04-04
 ~~~~~~~~~~~~~~~~
 
