@@ -136,6 +136,34 @@ def list():
                     )
                 print u"\t\t\tFirst active date: {first_active_date}".format(**meter)
 
+@production.command(
+        help="Dumps current plant structure as commands to recreate it")
+def dump():
+    import sys
+    aggr_ids = Mix.search([])
+    aggrs = Mix.read(aggr_ids, [])
+    for aggr in aggrs:
+        aggr = ns(aggr)
+        print("{} addmix {name!r} {description!r}".format(sys.argv[0],**aggr))
+        if aggr.enabled:
+            print("{} setmix {name!r} enabled True".format(sys.argv[0], **aggr))
+
+        if not aggr.plants: continue
+        plants = Plant.read(aggr.plants, [])
+        for plant in plants:
+            plant = ns(plant)
+            print("{} addplant {mix!r} {name!r} {description!r} {nshares} {first_active_date} {last_active_date}".format(sys.argv[0], mix=aggr.name, **plant))
+            if plant.enabled:
+                print("{} setplant {mix!r} {name!r} enabled True".format(sys.argv[0], mix=aggr.name, **plant))
+            if not plant.meters: continue
+            meters = Meter.read(plant.meters, [])
+            for meter in meters:
+                meter=ns(meter)
+                print("{} addmeter {mix!r} {plant!r} {name!r} {description!r} {first_active_date}"
+                    .format(sys.argv[0], mix=aggr.name, plant=plant.name, **meter))
+                if meter.enabled:
+                    print("{} setmeter {mix!r} {plant!r} {name!r} enabled True"
+                        .format(sys.argv[0], mix=aggr.name, plant=plant.name, **meter))
 
 @production.command()
 def clear():
