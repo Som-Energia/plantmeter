@@ -44,7 +44,7 @@ capture rightspershare-pre-1.csv   scripts/genkwh_mtc.py curve rightspershare 1
 capture remainders-pre.cvs genkwh_remainders.py active
 
 step "Recomputing rights"
-run genkwh_productionloader.py recompute --id "$GENERATIONKWH_MIX_ID" ||
+run genkwh_rightsgranter.py recompute --id "$GENERATIONKWH_MIX_ID" ||
     fail "Rights recomputation failed"
 
 step "Dumping resulting granted rights"
