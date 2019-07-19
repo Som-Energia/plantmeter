@@ -15,8 +15,8 @@ setup(
 	license = 'GNU General Public License v3 or later (GPLv3+)',
 	packages=find_packages(exclude=['*[tT]est*']),
 	scripts=[
-		'scripts/genkwh_plants.py',
-		'scripts/genkwh_mtc.py',
+#		'scripts/genkwh_plants.py',
+#		'scripts/genkwh_mtc.py',
 		],
 	install_requires=[
         'pymongo<3.0',
