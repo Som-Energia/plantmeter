@@ -224,6 +224,8 @@ class MongoTimeCurve(object):
 
         stop = start + datetime.timedelta(days=len(data)//hoursPerDay+1)
         oldData, filling = self.get(start, stop, filter, field, filling=True)
+        if type(data) == numpy.ndarray:
+            data = (x.item() for x in data)
         for i,(bin,old,f) in enumerate(zip(data,oldData,filling)):
             curveDate = curveIndexToDate(start, i)
             if curveDate is None: continue

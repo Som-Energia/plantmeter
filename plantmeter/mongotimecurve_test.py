@@ -738,6 +738,32 @@ class MongoTimeCurve_Test(unittest.TestCase):
             +24*[True]+[False]
             )
 
+    def test_update_numpyData(self):
+        import numpy
+        mtc = self.setupPoints([])
+
+        curve = mtc.update(
+            start=localisodate('2015-08-15'),
+            filter='miplanta',
+            field='ae',
+            data=numpy.array(+25*[1]), # This is different
+            )
+        curve, filling = mtc.get(
+            start=localisodate('2015-08-15'),
+            stop=localisodate('2015-08-15'),
+            filter='miplanta',
+            field='ae',
+            filling=True,
+            )
+        self.assertEqual(
+            list(curve),
+            +24*[1]+[0]
+            )
+        self.assertEqual(
+            list(filling),
+            +24*[True]+[False]
+            )
+
 class MongoTimeCurveNew_Test(MongoTimeCurve_Test):
     def curve(self):
         return MongoTimeCurve(self.db, self.collection,
