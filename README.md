@@ -14,7 +14,14 @@ nosetests scripts # Run erp tests (require a working erp)
 
 ## CHANGES
 
-### 1.7.2 2019-07-18
+### plantmeter 1.7.3 2019-07-29
+
+_Py3 portability back_
+
+- MTC: mongo's bjson do not accept numpy types as attributes,
+  so we are taking the native item when updating with numpy arrays.
+
+### plantmeter 1.7.2 2019-07-18
 
 _Not importing anymore release_
 
@@ -38,13 +45,13 @@ _Not importing anymore release_
 - New migration script to perform the former fix and rewrite the rights
 
 
-### 1.7.1 2019-04-04
+### plantmeter 1.7.1 2019-04-04
 
 - Removed deprecated scripts `genkwh_pull_status` and `genkwh_export`
 - Removed deprecated `genkwh_production` subcommands: pull-status, load-meassures and update-kwh
 - Script `genkwh_production.py` installed by setup.py
 
-### 1.7.0 2019-04-02
+### plantmeter 1.7.0 2019-04-02
 
 - Meters and plants have `first_active_date` attribute
 - Built plant shares is not a constant curve anymore, changes when adding new plants
@@ -58,19 +65,19 @@ _Not importing anymore release_
 - `genkwh_production.py`: meterset -> editmeter
 
 
-### 1.6.2 2019-01-21
+### plantmeter 1.6.2 2019-01-21
 
 - Deprecated `genkwh_pull_status.py` and `genkwh_pull_status.sh`
 - `genkwh_production.py`: added `pull_status` as subcommand
 - `genkwh_production.py pull_status`: nicer output and exit status
 - `genkwh_migration_ftp_to_tmprofile.py` migration script
 
-### 1.6.1 2019-01-03
+### plantmeter 1.6.1 2019-01-03
 
 - Show erp configuration at the begining of every command
 - Protect `genkwh_production.py clear` againts lossy fingers
 
-### 1.6.0 2019-01-03
+### plantmeter 1.6.0 2019-01-03
 
 - Python 3 supported (python module, not yet the erp code)
 - Migrated to pymongo 3
