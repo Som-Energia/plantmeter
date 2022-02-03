@@ -26,6 +26,8 @@ setup(
         'consolemsg',
         'mock',
         'b2btest',
+        'pytest',
+        'pytest-cov',
 	],
 	include_package_data = True,
 	test_suite = 'plantmeter',

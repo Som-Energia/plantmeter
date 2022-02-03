@@ -40,7 +40,7 @@ jobs:
             coveralls
       - name: Unit tests
         run: |
-          coverage run --source generationkwh ./setup.py test
+          pytest 
 
       - name: Coveralls
         uses: AndreMiras/coveralls-python-action@develop
