@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
-
+import sys
 readme = open("README.rst").read()
+
+py2 = sys.version_info<(3,)
 
 setup(
 	name = "plantmeter",
@@ -14,10 +16,6 @@ setup(
 	long_description = readme,
 	license = 'GNU General Public License v3 or later (GPLv3+)',
 	packages=find_packages(exclude=['*[tT]est*']),
-	scripts=[
-#		'scripts/genkwh_plants.py',
-#		'scripts/genkwh_mtc.py',
-		],
 	install_requires=[
         'pymongo',
         'numpy<1.17' if py2 else 'numpy', # Py2
