@@ -62,6 +62,10 @@ def utcisodatetime(string):
     """Takes a date-time string and returns it as utc date"""
     return string and asUtc(datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S"))
 
+def isodatetime(string):
+    """Takes a time-zoned iso date-time string and returns a datetime"""
+    return string and datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S%T")
+
 def dateToLocal(date):
     # TODO: optimize dateToLocal
     return localisodate(str(date))
