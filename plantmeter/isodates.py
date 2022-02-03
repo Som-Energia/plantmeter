@@ -30,10 +30,6 @@ def parseLocalTime(string, isSummer=False, format="%Y-%m-%d %H:%M:%S"):
     lesser = tz.normalize(localized-onehour)
     return lesser if lesser.dst() else localized
 
-def addHours(normalized, hours):
-    hours = datetime.timedelta(hours=hours)
-    return tz.normalize(normalized + hours)
-
 def localisodate(string):
     """Takes a date string and returns it as local datetime"""
     return string and toLocal(datetime.datetime.strptime(string, "%Y-%m-%d"))
@@ -104,6 +100,10 @@ def assertUtcDateTime(name, value):
         "{} should have timezone".format(name))
     assert value.tzname() == 'UTC', (
         "{} has {} timezone".format(name, value.tzname()))
+
+def addHours(dt, hours):
+    hours = datetime.timedelta(hours=hours)
+    return tz.normalize(dt + hours)
 
 def addDays(date, ndays):
     resultday = date.date() + datetime.timedelta(days=ndays)
