@@ -31,15 +31,15 @@ def parseLocalTime(string, isSummer=False, format="%Y-%m-%d %H:%M:%S"):
     return lesser if lesser.dst() else localized
 
 def localisodate(string):
-    """Takes a date string and returns it as local datetime"""
+    """Takes a date string and returns it as local datetime (time set to 00:00:00CET/CEST)"""
     return string and toLocal(datetime.datetime.strptime(string, "%Y-%m-%d"))
 
 def utcisodate(string):
-    """Takes a date string and returns it as utc datetime"""
+    """Takes a date string and returns it as utc datetime (time set to 00:00:00Z)"""
     return string and asUtc(datetime.datetime.strptime(string, "%Y-%m-%d"))
 
 def naiveisodate(string):
-    """Takes a date string and returns it as naive datetime"""
+    """Takes a date string and returns it as naive datetime (time set to 00:00:00, no TZ)"""
     return string and datetime.datetime.strptime(string, "%Y-%m-%d")
 
 def isodate(string):
@@ -47,15 +47,15 @@ def isodate(string):
     return string and datetime.datetime.strptime(string, "%Y-%m-%d").date()
 
 def naiveisodatetime(string):
-    """Takes a date-time string and returns a naive date"""
+    """Takes a date-time string and returns a naive datetime"""
     return string and datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
 
 def localisodatetime(string):
-    """Takes a date-time string and returns a local date"""
+    """Takes a date-time string and returns a local datetime"""
     return string and toLocal(datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S"))
 
 def utcisodatetime(string):
-    """Takes a date-time string and returns it as utc date"""
+    """Takes a date-time string and returns it as utc datetime"""
     return string and asUtc(datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S"))
 
 def isodatetime(string):
@@ -113,7 +113,7 @@ def addDays(date, ndays):
 # TODO: TOTEST
 def daterange(start_date, end_date, **kwds):
     """
-    Generates dates from start_date to end_date,
+    Generates dates from start_date to end_date, including both,
     additional parameters provides paramenters for the
     timedelta constructor to be used as step.
     """
