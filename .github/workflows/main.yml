@@ -37,7 +37,6 @@ jobs:
         with:
           packages: |
             coveralls
-            git+https://github.com/som-energia/plantmeter.git@master
       - name: Unit tests
         run: |
           coverage run --source generationkwh ./setup.py test
