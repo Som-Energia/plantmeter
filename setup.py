@@ -19,7 +19,7 @@ setup(
 #		'scripts/genkwh_mtc.py',
 		],
 	install_requires=[
-        'pymongo<3.0',
+        'pymongo',
         'numpy',
         'xlrd',
         'yamlns',
