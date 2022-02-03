@@ -20,7 +20,7 @@ setup(
 		],
 	install_requires=[
         'pymongo',
-        'numpy',
+        'numpy<1.17' if py2 else 'numpy', # Py2
         'xlrd',
         'yamlns',
         'pytz',
