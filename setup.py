@@ -27,7 +27,7 @@ setup(
         'mock',
         'b2btest',
         'pytest',
-        'pytest-cov',
+        'pytest-cov<3' if py2 else 'pytest-cov', # Py2
 	],
 	include_package_data = True,
 	test_suite = 'plantmeter',
