@@ -41,7 +41,7 @@ jobs:
             coveralls
       - name: Unit tests
         run: |
-          pytest 
+          pytest
 
       - name: Coveralls
         uses: AndreMiras/coveralls-python-action@develop
