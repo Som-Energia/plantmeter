@@ -5,7 +5,7 @@ from .mongotimecurve import (
     dateToCurveIndex,
     curveIndexToDate,
     )
-from .isodates import (
+from somutils.isodates import (
     asUtc,
     toLocal,
     localisodate,

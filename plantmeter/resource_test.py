@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from .mongotimecurve import MongoTimeCurve
-from .isodates import localisodate
+from somutils.isodates import localisodate
 import os
 import pymongo
 from datetime import date

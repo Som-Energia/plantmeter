@@ -19,7 +19,7 @@ import datetime
 
 """
 
-from .isodates import (
+from somutils.isodates import (
     asUtc,
     toLocal,
     tz,

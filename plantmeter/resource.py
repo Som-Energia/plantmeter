@@ -1,6 +1,6 @@
 import numpy as np
 
-from .isodates import (
+from somutils.isodates import (
     isodate,
     dateToLocal,
     assertDate,
