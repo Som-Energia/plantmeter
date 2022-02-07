@@ -17,6 +17,7 @@ setup(
 	license = 'GNU General Public License v3 or later (GPLv3+)',
 	packages=find_packages(exclude=['*[tT]est*']),
 	install_requires=[
+        'somutils',
         'pymongo<4',
         'numpy<1.17' if py2 else 'numpy', # Py2
         'xlrd',
@@ -34,7 +35,9 @@ setup(
 #	test_runner = 'colour_runner.runner.ColourTextTestRunner',
 	classifiers = [
 		'Programming Language :: Python',
+		'Programming Language :: Python :: 2.7',
 		'Programming Language :: Python :: 3',
+		'Programming Language :: Python :: 3.8',
 		'Topic :: Software Development :: Libraries :: Python Modules',
 		'Intended Audience :: Developers',
 		'Development Status :: 2 - Pre-Alpha',
