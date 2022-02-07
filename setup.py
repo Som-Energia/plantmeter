@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 import sys
-readme = open("README.rst").read()
+readme = open("README.md").read()
 
 py2 = sys.version_info<(3,)
 
@@ -14,6 +14,7 @@ setup(
 	author_email = "info@somenergia.coop",
 	url = 'https://github.com/Som-Energia/plantmeter',
 	long_description = readme,
+    long_description_content_type = 'text/markdown',
 	license = 'GNU General Public License v3 or later (GPLv3+)',
 	packages=find_packages(exclude=['*[tT]est*']),
 	install_requires=[
