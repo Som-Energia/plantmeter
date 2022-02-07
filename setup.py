@@ -26,7 +26,7 @@ setup(
         'pytz',
         'erppeek',
         'consolemsg',
-        'mock',
+        'mock<4' if py2 else 'mock', # Py2
         'b2btest',
         'pytest',
         'pytest-cov<3' if py2 else 'pytest-cov', # Py2
