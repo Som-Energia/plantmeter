@@ -7,7 +7,6 @@ from .isodates import (
     assertLocalDateTime,
     )
 
-import pymongo
 import datetime
 
 import unittest
