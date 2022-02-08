@@ -5,6 +5,14 @@
 
 OpenERP module and library to manage multisite energy generation
 
+## To be extinguished package
+
+Most of the content of this packages is in progress of being
+moved to somenergia-generationkwh o generic packages like
+somenergia-utils.
+
+Further development should consider continuing this transition.
+
 ## Install and test
 
 ```bash
@@ -13,13 +21,15 @@ pytest plantmeter # Run unit tests
 pytest som_plantmeter/tests # Run erp tests (require a working local erp)
 ```
 
-## To be extinguished package
+Some erp tests clean up collections on the mongo database the erp points to,
+which could be a disaster if your dbconfig is pointing to a production setup.
+So, those tests are disabled by default.
+In order to enable clean room test in erp tests:
 
-Most of the content of this packages is in progress of being
-moved to somenergia-generationkwh o generic packages like
-somenergia-utils.
-
-Further development should consider continuing this transition.
+- Ensure your dbconfig.py configuration is pointing to a testing database
+- Run `enable_destructive_tests.py` from somenergia-utils
+- This enables an erp config flag, that makes destrutive testing not to be skipped.
+- If, later, you accidentally change dbconfig to point a production setup, and run those tests they won't actually be run
 
 ## Code Map
 
