@@ -5,14 +5,35 @@
 
 OpenERP module and library to manage multisite energy generation
 
-## INSTALL
+## Install and test
 
 ```bash
 pip install -e .
-nosetests plantmeter # Run unit tests
-nosetests scripts # Run erp tests (require a working erp)
+pytest plantmeter # Run unit tests
+pytest som_plantmeter/tests # Run erp tests (require a working local erp)
 ```
 
+## To be extinguished package
+
+Most of the content of this packages is in progress of being
+moved to somenergia-generationkwh o generic packages like
+somenergia-utils.
+
+Further development should consider continuing this transition.
+
+## Code Map
+
+Refer to somenergia-generationkwh documentation on tips on how
+the code is structured.
+
+## How to release
+
+- Update the version in README changelogs
+- Update the version in setup.py
+- Commit "Bump to plantmeter-M.m.p"
+- git tag plantmeter-M.m.p
+- git push && git push --tags
+- The later push will generate the source package in pypi for the non-erp module
 
 
 ## CHANGES
