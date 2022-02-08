@@ -7,7 +7,7 @@ py2 = sys.version_info<(3,)
 
 setup(
 	name = "plantmeter",
-	version = "1.7.3",
+	version = "1.7.4",
 	description =
 		"OpenERP module and library to manage multisite energy generation",
 	author = "Som Energia SCCL",
