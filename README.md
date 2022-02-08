@@ -50,11 +50,11 @@ the code is structured.
 
 ### plantmeter 1.7.4 2022-01-08
 
-_"Keeping up with 2.7" Release_
+_"Keeping up with Python 2.7" Release_
 
 - Github actions for CI
 - Moved isodates to somutils
-- Python 2.4 compatibility: added conditional dependencies
+- Python 2.7 compatibility: added conditional dependencies
 
 ### plantmeter 1.7.3 2019-07-29
 
