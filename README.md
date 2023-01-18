@@ -48,6 +48,10 @@ the code is structured.
 
 ## CHANGES
 
+### plantmeter 1.7.5 2023-01-18
+
+- Add filter capabilities to MongoTimeCurve.get()
+
 ### plantmeter 1.7.4 2022-01-08
 
 _"Keeping up with Python 2.7" Release_
