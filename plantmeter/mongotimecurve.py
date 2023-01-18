@@ -123,7 +123,9 @@ class MongoTimeCurve(object):
                 '$lt': addDays(stop,1)
             }
         }
-        if filter: filters.update(name=filter)
+        if hasattr(filter, '__iter__'):
+            filters.update(filter)
+        elif filter: filters.update(name=filter)
         from bson.son import SON
 
         pipeline = [
