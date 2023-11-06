@@ -1,10 +1,7 @@
 somutils==1.7.2
-pymongo<3.0
-numpy
+pymongo<3.0;python_version<="2.7.18"
+pymongo<4.0;python_version>"2.7.18"
+numpy<1.17;python_version<="2.7.18"
+numpy;python_version>"2.7.18"
 xlrd
 yamlns
-pytz
-erppeek
-consolemsg
-mock
-b2btest
