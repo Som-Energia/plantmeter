@@ -235,7 +235,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-01-01'),
             stop=localisodate('2015-01-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -250,7 +250,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-01-01'),
             stop=localisodate('2015-01-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -265,7 +265,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2014-12-31'),
             stop=localisodate('2015-01-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -282,7 +282,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-01-01'),
             stop=localisodate('2015-01-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -298,7 +298,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-01-01'),
             stop=localisodate('2015-01-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -314,7 +314,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-01-01'),
             stop=localisodate('2015-01-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -329,7 +329,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-01-01'),
             stop=localisodate('2015-01-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -379,7 +379,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-01-01'),
             stop=localisodate('2015-01-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -395,7 +395,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-08-01'),
             stop=localisodate('2015-08-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -414,7 +414,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-03-29'),
             stop=localisodate('2015-03-29'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -429,7 +429,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-03-29'),
             stop=localisodate('2015-03-30'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -449,7 +449,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-10-25'),
             stop=localisodate('2015-10-25'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -560,7 +560,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         curve = mtc.get(
             start=localisodate('2015-01-01'),
             stop=localisodate('2015-01-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -591,7 +591,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         _, curve = mtc.get(
             start=localisodate('2015-08-15'),
             stop=localisodate('2015-08-15'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             filling=True,
             )
@@ -608,7 +608,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         _,curve = mtc.get(
             start=localisodate('2015-08-15'),
             stop=localisodate('2015-08-15'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             filling=True,
             )
@@ -623,7 +623,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
         with self.assertRaises(AssertionError) as ctx:
             mtc.update(
                 start=datetime.datetime(2015,8,15),
-                filter='miplanta',
+                filter=dict(name='miplanta'),
                 field='ae',
                 data=[],
                 )
@@ -649,7 +649,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
             mtc.get(
                 start=datetime.datetime(2015,8,15),
                 stop=localisodate("2015-08-15"),
-                filter='miplanta',
+                filter=dict(name='miplanta'),
                 field='ae',
                 )
         self.assertEqual(ctx.exception.args[0],
@@ -662,7 +662,7 @@ class MongoTimeCurve_Test(unittest.TestCase):
             mtc.get(
                 start=localisodate("2015-08-15"),
                 stop=datetime.datetime(2015,8,15),
-                filter='miplanta',
+                filter=dict(name='miplanta'),
                 field='ae',
                 )
         self.assertEqual(ctx.exception.args[0],
@@ -673,14 +673,14 @@ class MongoTimeCurve_Test(unittest.TestCase):
 
         curve = mtc.update(
             start=localisodate('2015-08-15'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             data=[1]+24*[0]
             )
         curve, filling = mtc.get(
             start=localisodate('2015-08-15'),
             stop=localisodate('2015-08-15'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             filling=True,
             )
@@ -694,18 +694,19 @@ class MongoTimeCurve_Test(unittest.TestCase):
             )
 
     def test_get_withFilledGap(self):
+
         mtc = self.setupPoints([])
 
         curve = mtc.update(
             start=localisodate('2015-08-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             data=+25*[1]+[1]+24*[1]
             )
         curve = mtc.get(
             start=localisodate('2015-08-01'),
             stop=localisodate('2015-08-01'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             )
         self.assertEqual(
@@ -718,14 +719,14 @@ class MongoTimeCurve_Test(unittest.TestCase):
 
         curve = mtc.update(
             start=localisodate('2015-08-15'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             data=+25*[1]
             )
         curve, filling = mtc.get(
             start=localisodate('2015-08-15'),
             stop=localisodate('2015-08-15'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             filling=True,
             )
@@ -744,14 +745,14 @@ class MongoTimeCurve_Test(unittest.TestCase):
 
         curve = mtc.update(
             start=localisodate('2015-08-15'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             data=numpy.array(+25*[1]), # This is different
             )
         curve, filling = mtc.get(
             start=localisodate('2015-08-15'),
             stop=localisodate('2015-08-15'),
-            filter='miplanta',
+            filter=dict(name='miplanta'),
             field='ae',
             filling=True,
             )

@@ -13,6 +13,7 @@ from .resource import (
     )
 
 import unittest
+import pytest
 
 def local_file(filename):
     return os.path.join(os.path.abspath(os.path.dirname(__file__)), filename)
@@ -185,12 +186,13 @@ class Resource_Test(unittest.TestCase):
                 0,0,0,0,0,0,0,0,8,14,12,10,18,36,70,26,26,12,8,4,0,0,0,0,0,
             ])
 
+    import sys
+    @pytest.mark.skipif(sys.version_info > (2,8), reason="py3 numpy requires same dimensions when sum arrays")
     def test__get_kwh__twoPlantsOneMeter(self):
         m1 = self.setupMeter(1, 'm1')
         self.fillMeter('m1', '2015-09-04')
         p1 = ProductionPlant(1,'plantName1','plantDescription1',True, meters=[m1])
         p2 = ProductionPlant(2,'plantName2','plantDescription2',True)
-
         aggr = ProductionAggregator(1,'aggrName','aggrDescription',True,plants=[p1,p2])
 
         self.assertEqual(

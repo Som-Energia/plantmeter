@@ -116,14 +116,14 @@ class MongoTimeCurve(object):
         ndays = (stop.date()-start.date()).days+1
         data = numpy.zeros(ndays*hoursPerDay, int)
         if filling :
-            filldata = numpy.zeros(ndays*hoursPerDay, numpy.bool)
+            filldata = numpy.zeros(ndays*hoursPerDay, bool)
         filters = {
             self.timestamp: {
                 '$gte': start,
                 '$lt': addDays(stop,1)
             }
         }
-        if hasattr(filter, '__iter__'):
+        if isinstance(filter, dict):
             filters.update(filter)
         elif filter: filters.update(name=filter)
         from bson.son import SON
@@ -224,6 +224,9 @@ class MongoTimeCurve(object):
         assert start.tzinfo is not None, (
             "MongoTimeCurve.update called with naive (no timezone) start date")
 
+        if isinstance(filter, str):
+            filter = dict(name=filter)
+
         stop = start + datetime.timedelta(days=len(data)//hoursPerDay+1)
         oldData, filling = self.get(start, stop, filter, field, filling=True)
         if type(data) == numpy.ndarray:
@@ -234,7 +237,7 @@ class MongoTimeCurve(object):
             if bin == old: continue
             self.fillPoint(
                 datetime=curveDate,
-                name=filter,
+                name=filter['name'],
                 **{field: bin}
                 )
 
