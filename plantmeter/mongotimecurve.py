@@ -114,7 +114,7 @@ class MongoTimeCurve(object):
             "MongoTimeCurve.get called with naive (no timezone) stop date")
 
         ndays = (stop.date()-start.date()).days+1
-        data = numpy.zeros(ndays*hoursPerDay, numpy.int)
+        data = numpy.zeros(ndays*hoursPerDay, int)
         if filling :
             filldata = numpy.zeros(ndays*hoursPerDay, numpy.bool)
         filters = {
