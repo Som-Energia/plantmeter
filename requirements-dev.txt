@@ -1,0 +1,9 @@
+pytz
+erppeek
+consolemsg
+mock<4;python_version<="2.7.18"
+mock;python_version>"2.7.18"
+b2btest
+pytest
+pytest-cov<3;python_version<="2.7.18"
+pytest-cov;python_version>"2.7.18"
