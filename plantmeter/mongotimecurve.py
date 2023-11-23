@@ -224,7 +224,7 @@ class MongoTimeCurve(object):
         assert start.tzinfo is not None, (
             "MongoTimeCurve.update called with naive (no timezone) start date")
 
-        if isinstance(filter, str):
+        if isinstance(filter, str) or isinstance(filter, int):
             filter = dict(name=filter)
 
         stop = start + datetime.timedelta(days=len(data)//hoursPerDay+1)

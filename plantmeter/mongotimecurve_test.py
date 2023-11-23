@@ -257,6 +257,18 @@ class MongoTimeCurve_Test(unittest.TestCase):
             list(curve),
             [0]*23+[10,0])
 
+    def test_get_intAsFilter(self):
+        mtc = self.curve()
+        curve = mtc.get(
+            start=localisodate('2015-01-01'),
+            stop=localisodate('2015-01-01'),
+            filter=1,
+            field='usage_kwh',
+        )
+        self.assertEqual(
+            list(curve),
+            [0]*25)
+
     def test_get_twoDays(self):
         mtc = self.setupPoints([
             ('2015-01-01 23:00:00', 'miplanta', 10),
@@ -764,6 +776,32 @@ class MongoTimeCurve_Test(unittest.TestCase):
             list(filling),
             +24*[True]+[False]
             )
+
+    def test_update_intAsFilter(self):
+        mtc = self.setupPoints([])
+
+        curve = mtc.update(
+            start=localisodate('2015-08-15'),
+            filter=1,
+            field='usage_kwh',
+            data=+25*[1]
+        )
+        curve, filling = mtc.get(
+            start=localisodate('2015-08-15'),
+            stop=localisodate('2015-08-15'),
+            filter=1,
+            field='usage_kwh',
+            filling=True,
+        )
+        self.assertEqual(
+            list(curve),
+            +24*[1]+[0]
+        )
+        self.assertEqual(
+            list(filling),
+            +24*[True]+[False]
+        )
+
 
 class MongoTimeCurveNew_Test(MongoTimeCurve_Test):
     def curve(self):
