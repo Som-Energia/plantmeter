@@ -15,7 +15,7 @@ with open('README.md') as f:
 
 setup(
     name = "plantmeter",
-    version = "1.7.8",
+    version = "1.7.9",
     description =
         "OpenERP module and library to manage multisite energy generation",
     author = "Som Energia SCCL",
