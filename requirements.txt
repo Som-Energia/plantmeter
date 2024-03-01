@@ -1,5 +1,4 @@
-https://github.com/Som-Energia/somenergia-utils/archive/refs/tags/somutils-py2-1.8.9.zip;python_version<="2.7.18"
-somutils;python_version>"2.7.18"
+https://github.com/Som-Energia/somenergia-utils/archive/refs/tags/somutils-py2-1.8.9.zip
 pymongo==3.13.0;python_version<="2.7.18"
 pymongo<4.0;python_version>"2.7.18"
 numpy<1.17;python_version<="2.7.18"
