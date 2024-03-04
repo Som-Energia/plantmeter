@@ -6,6 +6,7 @@ from yamlns import namespace as ns
 # Readable verbose testcase listing
 unittest.TestCase.__str__ = unittest.TestCase.id
 
+
 def assertNsEqual(self, dict1, dict2):
     """
     Asserts that both dict have equivalent structure.
@@ -22,8 +23,8 @@ def assertNsEqual(self, dict1, dict2):
         if type(d) in (dict, ns):
             return ns(sorted(
                 (k, sorteddict(v))
-                for k,v in d.items()
-                ))
+                for k, v in d.items()
+            ))
         if type(d) in (list, tuple):
             return [sorteddict(x) for x in d]
         return d
@@ -32,23 +33,17 @@ def assertNsEqual(self, dict1, dict2):
 
     return self.assertMultiLineEqual(dict1.dump(), dict2.dump())
 
-def _inProduction():
-    import erppeek_wst
-    import dbconfig
-    c = erppeek_wst.ClientWST(**dbconfig.erppeek)
-    c.begin()
-    destructive_testing_allowed = c._execute(
-        'res.config', 'get', 'destructive_testing_allowed', False)
-    c.rollback()
-    c.close()
 
-    if destructive_testing_allowed: return False
-    return True
+def _inProduction():
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return 'somenergia' in socket.gethostbyaddr(s.getsockname()[0])[0].split('.')
+
 
 def destructiveTest(decorated):
     return unittest.skipIf(_inProduction(),
-        "Destructive test being run in a production setup!!")(decorated)
-
+                           "Destructive test being run in a production setup!!")(decorated)
 
 
 # vim: ts=4 sw=4 et
