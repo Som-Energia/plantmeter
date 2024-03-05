@@ -1,5 +1,6 @@
 # plantmeter 
 [![CI](https://github.com/Som-Energia/plantmeter/actions/workflows/main.yml/badge.svg)](https://github.com/Som-Energia/plantmeter/actions/workflows/main.yml)
+[![som_plantmeter](https://github.com/Som-Energia/plantmeter/actions/workflows/som_plantmeter.yml/badge.svg)](https://github.com/Som-Energia/plantmeter/actions/workflows/som_plantmeter.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Som-Energia/plantmeter/badge.svg?branch=master)](https://coveralls.io/github/Som-Energia/plantmeter?branch=master)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/plantmeter)](https://pypi.org/project/plantmeter)
 
