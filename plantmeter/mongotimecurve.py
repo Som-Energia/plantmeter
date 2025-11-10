@@ -121,7 +121,8 @@ class MongoTimeCurve(object):
             self.timestamp: {
                 '$gte': start,
                 '$lt': addDays(stop,1)
-            }
+            },
+            "type": {"$ne" : "p4"},  # discard quarterhourly values, there are included in type=p
         }
         if isinstance(filter, dict):
             filters.update(filter)
